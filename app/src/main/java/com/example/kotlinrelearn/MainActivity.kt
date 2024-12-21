@@ -23,6 +23,9 @@ class MainActivity : ComponentActivity() {
                 composable("register_screen"){
                     RegisterScreen(navController)
                 }
+                composable("create_password_screen"){
+                    CreatePasswordScreen(navController)
+                }
 
             })
         }

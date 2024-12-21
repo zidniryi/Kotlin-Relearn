@@ -3,13 +3,17 @@ package com.example.kotlinrelearn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,23 +37,28 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterScreen(navController: NavController){
-    var username by remember {
-        mutableStateOf("")
-    }
-    Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().padding(16.dp), ) {
-        Spacer(modifier = Modifier.height(40.dp))
-        Text("Create username", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Pick username for your account. You can always change it later", fontSize = 16.sp, textAlign = TextAlign.Center)
-        Spacer(modifier = Modifier.height(16.dp))
+fun CreatePasswordScreen(navController: NavController) {
+    var password by remember { mutableStateOf("") }
+    var savePassword by remember { mutableStateOf(false) }
 
-        // Password TextField
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Spacer(modifier = Modifier.height(40.dp))
+        Text("Create password", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("Pick password for your account. You can always change it later", fontSize = 16.sp, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.height(16.dp))
         TextField(
-            value = username,
-            onValueChange = {username = it},
-            placeholder = { Text("Username") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            value = password,
+            onValueChange = { password = it },
+            placeholder = { Text("Password") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
@@ -58,21 +67,39 @@ fun RegisterScreen(navController: NavController){
                     color = Color.Gray,
                     shape = MaterialTheme.shapes.small
                 )
-                .padding(4.dp), // Optional padding inside the border
+                .padding(4.dp),
             singleLine = true,
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0xFFF9F9F9),
-                unfocusedIndicatorColor = Color.Transparent, // Remove bottom underline
-                focusedIndicatorColor = Color.Transparent // Remove bottom underline
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent
             )
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Save Password Checkbox
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .offset(x = (-8).dp)
+                .fillMaxWidth()
+        ) {
+            Checkbox(
+                checked = savePassword,
+                onCheckedChange = { savePassword = it },
+                colors = androidx.compose.material3.CheckboxDefaults.colors(
+                    checkedColor =  Color(0xFF3897F0),
+                    uncheckedColor = Color.Gray,
+                    checkmarkColor = Color.White
+                )
+            )
+            Text("Save password", fontSize = 16.sp)
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Login Button
+        // Next Button
         Button(
-            onClick = {
-                navController.navigate("create_password_screen")
-            },
+            onClick = { /* Handle navigation logic */ },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -80,6 +107,5 @@ fun RegisterScreen(navController: NavController){
         ) {
             Text(text = "Next", color = Color.White, fontSize = 16.sp)
         }
-
     }
 }
