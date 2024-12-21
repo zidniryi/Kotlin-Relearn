@@ -1,8 +1,5 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,22 +26,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.kotlinrelearn.R
+import com.example.kotlinrelearn.RegisterScreen
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LoginScreen()
-        }
-    }
-}
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -114,7 +106,9 @@ fun LoginScreen() {
         // Login Button
         Button(
             onClick = { /* Handle login logic */ },
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3897F0))
         ) {
             Text(text = "Log In", color = Color.White, fontSize = 16.sp)
@@ -154,15 +148,12 @@ fun LoginScreen() {
         Text(
             text = "Don’t have an account? Sign up.",
             color = Color(0xFF3897F0),
-            modifier = Modifier.clickable { /* Navigate to sign-up screen */ },
+            modifier = Modifier.clickable {
+                navController.navigate("register_screen")
+            },
             textAlign = TextAlign.Center,
             fontSize = 14.sp
         )
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen()
-}
