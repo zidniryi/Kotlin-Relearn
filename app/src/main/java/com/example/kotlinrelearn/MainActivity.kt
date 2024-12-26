@@ -27,6 +27,10 @@ class MainActivity : ComponentActivity() {
                     CreatePasswordScreen(navController)
                 }
 
+                composable("feed_screen") {
+                    FeedScreen(navController)
+                }
+
             })
         }
     }

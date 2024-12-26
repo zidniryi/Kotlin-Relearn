@@ -105,7 +105,9 @@ fun LoginScreen(navController: NavController) {
 
         // Login Button
         Button(
-            onClick = { /* Handle login logic */ },
+            onClick = {
+                navController.navigate("feed_screen")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),

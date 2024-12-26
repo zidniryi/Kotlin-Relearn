@@ -10,6 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -49,6 +50,11 @@ fun KotlinRelearnTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
+
+    val uiController = rememberSystemUiController()
+    uiController.setSystemBarsColor(colorScheme.background)
+    uiController.isStatusBarVisible = false
 
     MaterialTheme(
         colorScheme = colorScheme,
