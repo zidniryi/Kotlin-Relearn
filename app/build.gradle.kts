@@ -54,6 +54,7 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
     // System Ui Controller
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
 
