@@ -30,6 +30,10 @@ class MainActivity : ComponentActivity() {
                 composable("feed_screen") {
                     FeedScreen(navController)
                 }
+                composable("profile_screen"){
+                    ProfileScreen(navController)
+                }
+
 
             })
         }

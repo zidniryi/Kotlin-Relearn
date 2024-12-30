@@ -7,6 +7,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -139,7 +140,7 @@ fun FeedScreen(navController: NavController) {
                     commentsCount = (100..10000).random(),
                 ),
             )
-            Post(stories = stories, posts = posts)
+            Post(stories = stories, posts = posts, navController)
         }
 
     }
@@ -231,58 +232,64 @@ fun Stories(stories: List<User>) {
 
 @Composable
 fun Post(
-    stories:List<User>,
-    posts:List<Post>
+    stories: List<User>,
+    posts: List<Post>,
+    navController: NavController
 ) {
     val context = LocalContext.current
     LazyColumn(
-        modifier=Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-    ){
+    ) {
         item {
             Stories(stories = stories)
         }
-        items(posts){ post->
+        items(posts) { post ->
             var liked by remember {
                 mutableStateOf(false)
             }
-            LaunchedEffect(liked){
-                if (liked){
+            LaunchedEffect(liked) {
+                if (liked) {
                     delay(2000)
                     liked = false
                 }
             }
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    vertical = 1.dp, horizontal = 8.dp
-                ),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = 1.dp, horizontal = 8.dp
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(modifier = Modifier
-                        .border(
-                            1.dp, Brush.horizontalGradient(
-                                listOf(
-                                    Color(0xffff6f00),
-                                    Color(0xffffeb35),
-                                    Color(0xffff6f00),
-                                    Color(0xffff2b99),
-                                    Color(0xffff2bd1),
-                                    Color(0xffff2bd1),
-                                )
-                            ), CircleShape
-                        )
-                        .size(33.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
+                    navController.navigate("profile_screen")
+                }) {
+                    Box(
+                        modifier = Modifier
+                            .border(
+                                1.dp, Brush.horizontalGradient(
+                                    listOf(
+                                        Color(0xffff6f00),
+                                        Color(0xffffeb35),
+                                        Color(0xffff6f00),
+                                        Color(0xffff2b99),
+                                        Color(0xffff2bd1),
+                                        Color(0xffff2bd1),
+                                    )
+                                ), CircleShape
+                            )
+                            .size(33.dp),
                         contentAlignment = Alignment.Center
-                    ){
+                    ) {
                         AsyncImage(
                             model = ImageRequest
                                 .Builder(context)
                                 .data(post.user.profile)
                                 .crossfade(400)
                                 .build(),
-                            modifier= Modifier
+                            modifier = Modifier
                                 .clip(CircleShape)
                                 .size(30.dp),
                             contentScale = ContentScale.Crop,
@@ -298,7 +305,7 @@ fun Post(
                 detectTapGestures(onDoubleTap = {
                     liked = true
                 })
-            }, contentAlignment = Alignment.Center){
+            }, contentAlignment = Alignment.Center) {
                 AsyncImage(
                     model = ImageRequest
                         .Builder(context)
@@ -307,49 +314,53 @@ fun Post(
                         .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier=Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
-                AnimatedVisibility(visible = liked, enter = scaleIn(spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
-                )),exit = scaleOut()
+                AnimatedVisibility(
+                    visible = liked, enter = scaleIn(
+                        spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    ), exit = scaleOut()
                 ) {
                     Image(
-                        modifier=Modifier.size(100.dp),
+                        modifier = Modifier.size(100.dp),
                         painter = painterResource(id = R.drawable.heart),
                         contentDescription = null
                     )
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 2.dp, horizontal = 10.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 2.dp, horizontal = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                val iconsModifier=Modifier.size(20.dp)
+                val iconsModifier = Modifier.size(20.dp)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Icon(
-                        modifier=iconsModifier,
+                        modifier = iconsModifier,
                         painter = painterResource(id = R.drawable.ic_heart),
                         contentDescription = null
                     )
                     Icon(
-                        modifier=iconsModifier,
+                        modifier = iconsModifier,
                         painter = painterResource(id = R.drawable.ic_comment),
                         contentDescription = null
                     )
                     Icon(
-                        modifier=iconsModifier,
+                        modifier = iconsModifier,
                         painter = painterResource(id = R.drawable.ic_send),
                         contentDescription = null
                     )
                 }
                 Icon(
-                    modifier=iconsModifier,
+                    modifier = iconsModifier,
                     painter = painterResource(id = R.drawable.ic_save),
                     contentDescription = null
                 )
@@ -360,7 +371,11 @@ fun Post(
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(text = post.description, fontSize = 13.sp)
                 Spacer(modifier = Modifier.height(2.dp))
-                Text(text = "View all ${post.commentsCount} comments", fontSize = 12.sp, color = Color.Gray)
+                Text(
+                    text = "View all ${post.commentsCount} comments",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
             }
         }
     }
