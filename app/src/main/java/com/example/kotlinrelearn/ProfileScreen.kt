@@ -29,6 +29,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,8 +39,12 @@ import androidx.navigation.NavController
 
 @Composable
 fun ProfileScreen(navController: NavController) {
-    Column(modifier = Modifier.fillMaxSize().padding(WindowInsets.systemBars.asPaddingValues()) ) {
-        TopBarProfile(name = "Zidniryi12345678")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(WindowInsets.systemBars.asPaddingValues())
+    ) {
+        TopBarProfile(name = "Zidniryi12345678", modifier = Modifier.padding(10.dp))
         Spacer(modifier = Modifier.height(4.dp))
         ProfileSection()
 
@@ -69,22 +75,22 @@ fun TopBarProfile(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )
-        Spacer(Modifier.width(24.dp))
-     Row {
-         Icon(
-             painter = painterResource(id = R.drawable.ic_bell),
-             contentDescription = "Back",
-             tint = Color.Black,
-             modifier = Modifier.size(24.dp)
-         )
-         Spacer(Modifier.width(8.dp))
-         Icon(
-             painter = painterResource(id = R.drawable.ic_dotmenu),
-             contentDescription = "Back",
-             tint = Color.Black,
-             modifier = Modifier.size(20.dp)
-         )
-     }
+        Spacer(Modifier.width(20.dp))
+        Row {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_bell),
+                contentDescription = "Back",
+                tint = Color.Black,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(8.dp))
+            Icon(
+                painter = painterResource(id = R.drawable.ic_dotmenu),
+                contentDescription = "Back",
+                tint = Color.Black,
+                modifier = Modifier.size(20.dp)
+            )
+        }
     }
 }
 
@@ -108,6 +114,13 @@ fun ProfileSection(
             Spacer(modifier = Modifier.width(16.dp))
             StatSection(modifier = Modifier.weight(7f))
         }
+        ProfileDescription(
+            displayName = "Zidni Ridwan N",
+            description = "Lorem Ipsum Dolor Set Amet",
+            url = "konsepkoding.com",
+            followedBy = listOf("konsepkoding", "ros", "tokdalang"),
+            otherCount = 11
+        )
     }
 }
 
@@ -159,3 +172,69 @@ fun ProfileStats(numberText: String, text: String, modifier: Modifier = Modifier
     }
 
 }
+
+
+@Composable
+fun ProfileDescription(
+    displayName: String,
+    description: String,
+    url: String,
+    followedBy: List<String>,
+    otherCount: Int
+) {
+    val letterSpacing = 0.5.sp
+    val lineHeight = 20.sp
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+    ) {
+        Text(
+            text = displayName,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = letterSpacing,
+            lineHeight = lineHeight
+        )
+        Text(
+            text = description,
+            letterSpacing = letterSpacing,
+            lineHeight = lineHeight
+        )
+        Text(
+            text = url,
+            color = Color(0xFF3D3D91),
+            letterSpacing = letterSpacing,
+            lineHeight = lineHeight
+        )
+        if (followedBy.isNotEmpty()) {
+            Text(
+                text = buildAnnotatedString {
+                    val boldStyle = SpanStyle(
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
+                    append("Followed by")
+                    pushStyle(boldStyle)
+                    followedBy.forEachIndexed { index, name ->
+                        pushStyle(boldStyle)
+                        append(name)
+                        pop()
+                        if (index < followedBy.size - 1) {
+                            append(", ")
+                        }
+                    }
+                    if (otherCount > 2) {
+                        append(" and ")
+                        pushStyle(boldStyle)
+                        append("$otherCount others")
+                    }
+                },
+                letterSpacing = letterSpacing,
+                lineHeight = lineHeight
+            )
+        }
+    }
+}
+
+
